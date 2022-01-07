@@ -36,7 +36,7 @@ public class ItemPedido implements Serializable {
 		return (preco - desconto) * quantidade;
 	}
 	
-	@JsonIgnore
+	@JsonIgnore			//Td q começa com "get" o JPA entende q precisa serializar
 	public Pedido getPedido() {
 		return id.getPedido();
 	}
