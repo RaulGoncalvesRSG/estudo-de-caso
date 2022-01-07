@@ -30,14 +30,17 @@ public class Cliente implements Serializable {
 	@Column(unique=true)
 	private String email;
 	private String cpfOuCnpj;
-	private Integer tipo;					//Guarda o valor inteiro do tipo do cliente
+	private Integer tipo;								//Guarda o valor inteiro do tipo do cliente
 	
 	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 	
-	@ElementCollection			//Cria uma tabela no BD como entidade fraca
+	@ElementCollection									//Cria uma tabela no BD como entidade fraca
 	@CollectionTable(name="TELEFONE")
 	private Set<String> telefones = new HashSet<>();	//N há repetição de telefones
+	
+	@OneToMany(mappedBy = "cliente")
+	private List<Pedido> pedidos = new ArrayList<>();
 	
 	public Cliente() {
 	}
@@ -105,6 +108,10 @@ public class Cliente implements Serializable {
 
 	public void setTelefones(Set<String> telefones) {
 		this.telefones = telefones;
+	}
+	
+	public List<Pedido> getPedidos() {
+		return pedidos;
 	}
 
 	@Override

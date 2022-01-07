@@ -1,5 +1,6 @@
 package com.raul.demo.config;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +12,20 @@ import com.raul.demo.domain.Cidade;
 import com.raul.demo.domain.Cliente;
 import com.raul.demo.domain.Endereco;
 import com.raul.demo.domain.Estado;
+import com.raul.demo.domain.Pagamento;
+import com.raul.demo.domain.PagamentoComBoleto;
+import com.raul.demo.domain.PagamentoComCartao;
+import com.raul.demo.domain.Pedido;
 import com.raul.demo.domain.Produto;
+import com.raul.demo.domain.enums.EstadoPagamento;
 import com.raul.demo.domain.enums.TipoCliente;
 import com.raul.demo.repositories.CategoriaRepository;
 import com.raul.demo.repositories.CidadeRepository;
 import com.raul.demo.repositories.ClienteRepository;
 import com.raul.demo.repositories.EnderecoRepository;
 import com.raul.demo.repositories.EstadoRepository;
+import com.raul.demo.repositories.PagamentoRepository;
+import com.raul.demo.repositories.PedidoRepository;
 import com.raul.demo.repositories.ProdutoRepository;
 
 @Configuration		//Define a classe como uma classe de configuração
@@ -35,6 +43,10 @@ public class TestConfig implements CommandLineRunner {
 	private ClienteRepository clienteRepository;
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -79,5 +91,23 @@ public class TestConfig implements CommandLineRunner {
 		
 		clienteRepository.saveAll(Arrays.asList(cli1));
 		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+		
+		SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
+		Pedido ped1 = new Pedido(null, sfd.parse("30/09/2020 10:32"), cli1, e1);
+		Pedido ped2 = new Pedido(null, sfd.parse("10/10/2020 10:32"), cli1, e2);
+		
+		//ID do pagamento é o msmo ID do pedido
+		Pagamento pagamento1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pagamento1);
+		
+		//Pag 2 ainda n teve pagamento
+		Pagamento pagamento2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sfd.parse("20/10/2020 00:00"), null);
+		ped2.setPagamento(pagamento2);
+		
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		
+		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pagamento1, pagamento2));
 	}
 }
