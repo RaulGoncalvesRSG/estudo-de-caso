@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.raul.demo.domain.Categoria;
@@ -44,5 +47,11 @@ public class CategoriaService {
 		} catch (Exception e) {
 			throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos");
 		}
+	}
+	
+	//Contagem da página começa com 0
+	public Page<Categoria> findPage(Integer page, Integer linhasPorPagina, String orderBy, String direction){
+		PageRequest pageRequest = PageRequest.of(page, linhasPorPagina, Direction.valueOf(direction), orderBy);
+		return repository.findAll(pageRequest);
 	}
 }
