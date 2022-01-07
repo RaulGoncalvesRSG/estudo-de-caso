@@ -12,6 +12,7 @@ import com.raul.demo.domain.Cidade;
 import com.raul.demo.domain.Cliente;
 import com.raul.demo.domain.Endereco;
 import com.raul.demo.domain.Estado;
+import com.raul.demo.domain.ItemPedido;
 import com.raul.demo.domain.Pagamento;
 import com.raul.demo.domain.PagamentoComBoleto;
 import com.raul.demo.domain.PagamentoComCartao;
@@ -24,6 +25,7 @@ import com.raul.demo.repositories.CidadeRepository;
 import com.raul.demo.repositories.ClienteRepository;
 import com.raul.demo.repositories.EnderecoRepository;
 import com.raul.demo.repositories.EstadoRepository;
+import com.raul.demo.repositories.ItemPedidoRepository;
 import com.raul.demo.repositories.PagamentoRepository;
 import com.raul.demo.repositories.PedidoRepository;
 import com.raul.demo.repositories.ProdutoRepository;
@@ -47,6 +49,8 @@ public class TestConfig implements CommandLineRunner {
 	private PedidoRepository pedidoRepository;
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -101,7 +105,7 @@ public class TestConfig implements CommandLineRunner {
 		Pagamento pagamento1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
 		ped1.setPagamento(pagamento1);
 		
-		//Pag 2 ainda n teve pagamento
+		//pagamento2 ainda n teve seu pagamento realizado
 		Pagamento pagamento2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sfd.parse("20/10/2020 00:00"), null);
 		ped2.setPagamento(pagamento2);
 		
@@ -109,5 +113,18 @@ public class TestConfig implements CommandLineRunner {
 		
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagamento1, pagamento2));
+	
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.0);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.0);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.0);
+	
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
 }

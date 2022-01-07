@@ -1,0 +1,9 @@
+package com.raul.demo.repositories;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.raul.demo.domain.ItemPedido;
+
+public interface ItemPedidoRepository extends JpaRepository<ItemPedido, Integer> {
+
+}
