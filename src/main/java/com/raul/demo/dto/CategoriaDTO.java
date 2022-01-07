@@ -2,6 +2,9 @@ package com.raul.demo.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import com.raul.demo.domain.Categoria;
 
 public class CategoriaDTO implements Serializable {
@@ -9,8 +12,8 @@ public class CategoriaDTO implements Serializable {
 	
 	private Integer id;
 	
-//	@NotEmpty(message="Preenchimento obrigatório")
-//	@Length(min=5, max=80, message="O tamanho deve ser entre 5 e 80 caracteres")
+	@NotBlank(message="Preenchimento obrigatório")
+	@Size(min=5, max=80, message="O tamanho deve ser entre 5 e 80 caracteres")
 	private String nome;
 
 	public CategoriaDTO() {

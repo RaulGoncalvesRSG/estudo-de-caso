@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.raul.demo.domain.Categoria;
+import com.raul.demo.dto.CategoriaDTO;
 import com.raul.demo.repositories.CategoriaRepository;
 import com.raul.demo.services.exceptions.DataIntegrityException;
 import com.raul.demo.services.exceptions.ObjectNotFoundException;
@@ -53,5 +54,10 @@ public class CategoriaService {
 	public Page<Categoria> findPage(Integer page, Integer linhasPorPagina, String orderBy, String direction){
 		PageRequest pageRequest = PageRequest.of(page, linhasPorPagina, Direction.valueOf(direction), orderBy);
 		return repository.findAll(pageRequest);
+	}
+	
+	//Instancia uma Categoria a partir do obj DTO
+	public Categoria fromDTO(CategoriaDTO obDto) {
+		return new Categoria(obDto.getId(), obDto.getNome());
 	}
 }
