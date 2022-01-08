@@ -21,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.raul.demo.domain.Cliente;
 import com.raul.demo.dto.ClienteDTO;
+import com.raul.demo.dto.ClienteNewDTO;
 import com.raul.demo.services.ClienteService;
 
 @RestController
@@ -43,7 +44,7 @@ public class ClienteResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteDTO objDto){
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto){
 		Cliente obj = service.fromDTO(objDto);
 		obj = service.insert(obj);
 		

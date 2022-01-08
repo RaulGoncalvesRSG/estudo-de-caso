@@ -36,8 +36,9 @@ public class CategoriaService {
 	}
 
 	public Categoria update(Categoria obj) {
-		findById(obj.getId());				//Verifica se exise obj com o ID
-		return repository.save(obj);
+		Categoria newObj = findById(obj.getId());		//newObj é monitorado pelo JPA
+		updateData(newObj, obj);
+		return repository.save(newObj);
 	}
 
 	public void delete(Integer id) {
@@ -59,5 +60,10 @@ public class CategoriaService {
 	//Instancia uma Categoria a partir do obj DTO
 	public Categoria fromDTO(CategoriaDTO obDto) {
 		return new Categoria(obDto.getId(), obDto.getNome());
+	}
+	
+	//Atualiza o newObj com os novos dados vindo na requisição
+	private void updateData(Categoria newObj, Categoria obj) {
+		newObj.setNome(obj.getNome());
 	}
 }
