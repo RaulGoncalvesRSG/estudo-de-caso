@@ -33,6 +33,7 @@ public class Cliente implements Serializable {
 	private String cpfOuCnpj;
 	private Integer tipo;								//Guarda o valor inteiro do tipo do cliente
 	
+	//Td operação q modificar o cliente irá refletir em cascata nos endereços
 	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 	

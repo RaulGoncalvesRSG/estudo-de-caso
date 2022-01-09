@@ -7,7 +7,10 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.raul.demo.services.validation.ClienteInsert;
+
 //Classe com os dados da requisição para a criação de um Cliente
+@ClienteInsert			//@ClienteInsert Anotação personalizads
 public class ClienteNewDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	

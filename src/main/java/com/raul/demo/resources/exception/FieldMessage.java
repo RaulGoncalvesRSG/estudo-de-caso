@@ -2,7 +2,7 @@ package com.raul.demo.resources.exception;
 
 import java.io.Serializable;
 
-//Classe para carregar os dados dos erros
+//Classe para carregar os dados dos erros: o nome do campo e a msg de erro daquele campo
 public class FieldMessage implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
