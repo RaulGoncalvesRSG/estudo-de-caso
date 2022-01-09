@@ -16,7 +16,10 @@ import com.raul.demo.domain.enums.EstadoPagamento;
 
 @Entity
 //InheritanceType.JOINED gera uma tabela para cada subclasse
-@Inheritance(strategy=InheritanceType.JOINED)	
+@Inheritance(strategy=InheritanceType.JOINED)
+/*A classe Pagameno terá um campo adicional (property) chamado "@type". Esse campo irá diferenciar
+o tipo de pagamento para indicar qual das subclasses deve ser instanciada. Ou seja, se o Json
+terá os atributos de PagamentoComBoleto ou PagamentoComCartao*/
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 public abstract class Pagamento implements Serializable {
 	private static final long serialVersionUID = 1L;

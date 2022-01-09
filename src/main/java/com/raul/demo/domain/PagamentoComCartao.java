@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.raul.demo.domain.enums.EstadoPagamento;
 
 @Entity
-@JsonTypeName("pagamentoComCartao")
+@JsonTypeName("pagamentoComCartao")			//Valor para o campo property de Pagamento
 public class PagamentoComCartao extends Pagamento {
 	private static final long serialVersionUID = 1L;
 
