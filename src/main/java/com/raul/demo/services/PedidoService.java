@@ -23,15 +23,15 @@ public class PedidoService {
 	@Autowired
 	private PedidoRepository repository;
 	@Autowired
+	private PagamentoRepository pagamentoRepository;
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
+	@Autowired
 	private BoletoService boletoService;
 	@Autowired
 	private ProdutoService produtoService;
 	@Autowired
 	private ClienteService clienteService;
-	@Autowired
-	private PagamentoRepository pagamentoRepository;
-	@Autowired
-	private ItemPedidoRepository itemPedidoRepository;
 	
 	public Pedido buscar(Integer id) {
 		Optional<Pedido> obj = repository.findById(id);

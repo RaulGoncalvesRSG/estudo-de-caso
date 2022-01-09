@@ -3,12 +3,16 @@
 ## Sobre o projeto
 O sistema back-end permite o usuário realizar pedidos de produtos. A arquitetura está dividida nas camadas resource (controller), service e reposotory. 
 
+O projeto possui profiles: test (teste), dev (desenvolvimento) e prod (produção). 
+O profile define configurações do projeto ser executado em determinado ambiente.
+
 ## Tecnologias utilizadas
 * Java
 * Spring Boot
 * Spring Rest
 * Spring Data JPA
 * Banco de Dados H2
+* MySQL
 
 ## Diagrama UM
 ![Diagrama UML](imagens_sistema/diagrama.png)
