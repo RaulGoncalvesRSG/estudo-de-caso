@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.raul.demo.domain.Categoria;
@@ -33,6 +34,8 @@ import com.raul.demo.repositories.ProdutoRepository;
 @Service		//Classe responsável por conhecer como tem q instanciar um BD de teste
 public class DBService {
 	
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 	@Autowired
 	private CategoriaRepository categoriaRepository;
 	@Autowired
@@ -109,7 +112,7 @@ public class DBService {
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
 		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
 		
-		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "12345678", TipoCliente.PESSOAFISICA);
+		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "12345678", TipoCliente.PESSOAFISICA, encoder.encode("123"));
 		
 		cli1.getTelefones().addAll(Arrays.asList("12345", "12346"));
 		

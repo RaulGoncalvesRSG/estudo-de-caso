@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.raul.demo.domain.Cidade;
@@ -25,6 +26,9 @@ import com.raul.demo.services.exceptions.ObjectNotFoundException;
 @Service
 public class ClienteService {
 
+	@Autowired
+	private BCryptPasswordEncoder encoder;
+	
 	@Autowired
 	private ClienteRepository repository;
 	
@@ -71,11 +75,11 @@ public class ClienteService {
 	}
 	
 	public Cliente fromDTO(ClienteDTO obDto) {
-		return new Cliente(obDto.getId(), obDto.getNome(), obDto.getEmail(), null, null);
+		return new Cliente(obDto.getId(), obDto.getNome(), obDto.getEmail(), null, null, null);
 	}
 	
 	public Cliente fromDTO(ClienteNewDTO objDto) {
-		Cliente cliente = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(), TipoCliente.toEnum(objDto.getTipo()));
+		Cliente cliente = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(), TipoCliente.toEnum(objDto.getTipo()), encoder.encode(objDto.getSenha()));
 		Cidade cidade = new Cidade(objDto.getCidadeId(), null, null);
 		Endereco endereco = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), objDto.getBairro(), objDto.getCep(), cliente, cidade);
 		
