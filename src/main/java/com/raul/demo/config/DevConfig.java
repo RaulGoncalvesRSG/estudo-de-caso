@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.raul.demo.services.DBService;
+import com.raul.demo.services.SmtpEmailService;
+import com.raul.demo.services.email.EmailService;
 
 @Configuration
 @Profile("dev")
@@ -30,5 +32,10 @@ public class DevConfig {
 		
 		dbService.instantiateTestDatabase();
 		return true;	//O método precisa retornar algo, n pode ser void
+	}
+	
+	@Bean				
+	public EmailService emailService() {
+		return new SmtpEmailService();
 	}
 }
