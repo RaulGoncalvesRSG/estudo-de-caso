@@ -32,13 +32,15 @@ public class JWTUtil {
 	}
 	
 	public boolean tokenValido(String token) {
+		//Claims é um tipo do jwt q armazena as reivindicações do token
 		Claims claims = getClaims(token);
 		
 		if (claims != null) {
-			String username = claims.getSubject();
+			String username = claims.getSubject();				//getSubject retorna o usuário
 			Date expirationDate = claims.getExpiration();
 			Date now = new Date(System.currentTimeMillis());
 			
+			//Verifica o instante atual é anterior à data de expiração
 			if (username != null && expirationDate != null && now.before(expirationDate)) {
 				return true;
 			}
@@ -46,8 +48,10 @@ public class JWTUtil {
 		return false;
 	}
 
+	//Pega o usuário através do token
 	public String getUsername(String token) {
 		Claims claims = getClaims(token);
+		
 		if (claims != null) {
 			return claims.getSubject();
 		}
@@ -56,10 +60,11 @@ public class JWTUtil {
 	
 	private Claims getClaims(String token) {
 		try {
+			//Função q recupera os clains a partir de um token
 			return Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token).getBody();
 		}
 		catch (Exception e) {
-			return null;
+			return null;			//token inválido
 		}
 	}
 }
