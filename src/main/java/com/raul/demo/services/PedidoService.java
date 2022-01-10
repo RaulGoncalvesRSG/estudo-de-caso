@@ -15,6 +15,7 @@ import com.raul.demo.domain.enums.EstadoPagamento;
 import com.raul.demo.repositories.ItemPedidoRepository;
 import com.raul.demo.repositories.PagamentoRepository;
 import com.raul.demo.repositories.PedidoRepository;
+import com.raul.demo.services.email.EmailService;
 import com.raul.demo.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -32,6 +33,8 @@ public class PedidoService {
 	private ProdutoService produtoService;
 	@Autowired
 	private ClienteService clienteService;
+	@Autowired
+	private EmailService emailService;
 	
 	public Pedido buscar(Integer id) {
 		Optional<Pedido> obj = repository.findById(id);
@@ -66,7 +69,9 @@ public class PedidoService {
 			ip.setPreco(ip.getProduto().getPreco());
 			ip.setPedido(obj);
 		}
+		
 		itemPedidoRepository.saveAll(obj.getItens());	//O repository é capaz de salvar uma lista
+		emailService.sendOrderConfirmationEmail(obj);
 		
 		return obj;
 	}
