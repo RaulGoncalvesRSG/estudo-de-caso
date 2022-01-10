@@ -121,7 +121,7 @@ public class Cliente implements Serializable {
 	}
 	
 	//Converte o Set de inteiros para um Set<Perfil>
-	public Set<Perfil> getPerfils() {
+	public Set<Perfil> getPerfis() {
 		return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
 	}
 	

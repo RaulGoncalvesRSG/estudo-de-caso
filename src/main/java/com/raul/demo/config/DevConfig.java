@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.raul.demo.services.DBService;
-import com.raul.demo.services.SmtpEmailService;
 import com.raul.demo.services.email.EmailService;
+import com.raul.demo.services.email.SmtpEmailService;
 
 @Configuration
 @Profile("dev")

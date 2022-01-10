@@ -13,10 +13,15 @@ O profile define configurações do projeto ser executado em determinado ambient
 * Spring Boot
 * Spring Rest
 * Spring Data JPA
-* Spring Security
+* Spring Security/ JWT
 * Banco de Dados H2
 * MySQL
 * SMTP do Google
+
+## Padrões utilizados no projeto
+* Rest
+* DTO
+* Strategy
 
 ## Diagrama UML
 ![Diagrama UML](imagens_sistema/diagrama.png)

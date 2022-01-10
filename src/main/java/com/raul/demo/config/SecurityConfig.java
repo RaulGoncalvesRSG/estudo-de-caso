@@ -19,19 +19,24 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.raul.demo.security.JWTAuthenticationFilter;
+import com.raul.demo.security.JWTUtil;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
+	/*É injetado uma interface, mas o Spring é inteligente o suficiente para buscar a implementação 
+	 * dela (UserDetailsServiceImpl)*/
+	@Autowired			
 	private UserDetailsService userDetailsService;
 	
 	@Autowired
     private Environment environment;			//Para acessar os profiles do projeto
 	
-	//@Autowired
-//	private JWTUtil jwtUtil;
+	@Autowired
+	private JWTUtil jwtUtil;
 	
 	//Caminhos q ficarão liberados por padrão
 	private static final String[] PUBLIC_MATCHERS = {
@@ -71,12 +76,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(PUBLIC_MATCHERS).permitAll()
 			//Para todo resto é exigido autenticação
 			.anyRequest().authenticated();
-	//	http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
 	//	http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 		//Garante que o back end não irá criar seção de usuário
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 	
+	/*Configuração do mecanismo de autenticação. Método para indicar qm é o userDetailsService e qual
+	  é o algoritmo de encodificação da senha userDetailsService indica qm é capaz de buscar o 
+	  usuário por email*/
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
