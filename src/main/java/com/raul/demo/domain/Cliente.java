@@ -5,18 +5,21 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.raul.demo.domain.enums.Perfil;
 import com.raul.demo.domain.enums.TipoCliente;
 
 @Entity
@@ -40,15 +43,22 @@ public class Cliente implements Serializable {
 	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 	
-	@ElementCollection									//Cria uma tabela no BD como entidade fraca
+	@ElementCollection								   //Cria uma tabela no BD como entidade fraca
 	@CollectionTable(name="TELEFONE")
-	private Set<String> telefones = new HashSet<>();	//N há repetição de telefones
+	private Set<String> telefones = new HashSet<>();   //N há repetição de telefones
+	
+	//EAGER garante q sempre q buscar um cliente do BD, automaticamente os perfis sejam buscados
+	@ElementCollection(fetch=FetchType.EAGER)	
+	@CollectionTable(name="PERFIS")
+	private Set<Integer> perfis = new HashSet<>();
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<>();
 	
 	public Cliente() {
+		//Todos clientes do sistema automaticamente terão o perfil do tipo CLIENTE
+		addPerfil(Perfil.CLIENTE);
 	}
 
 	//O tipo para lado externo da classe é TipoCliente e não um inteiro
@@ -59,6 +69,7 @@ public class Cliente implements Serializable {
 		this.cpfOuCnpj = cpfOuCnpj;
 		this.tipo = (tipo == null)? null : tipo.getCod();
 		this.senha = senha;
+		addPerfil(Perfil.CLIENTE);
 	}
 
 	public Integer getId() {
@@ -107,6 +118,15 @@ public class Cliente implements Serializable {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+	
+	//Converte o Set de inteiros para um Set<Perfil>
+	public Set<Perfil> getPerfils() {
+		return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
+	}
+	
+	public void addPerfil(Perfil perfil) {
+		perfis.add(perfil.getCod());			//Add apenas o número inteiro
 	}
 
 	public List<Endereco> getEnderecos() {
