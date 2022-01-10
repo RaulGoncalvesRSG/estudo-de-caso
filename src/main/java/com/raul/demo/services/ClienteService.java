@@ -15,11 +15,14 @@ import org.springframework.stereotype.Service;
 import com.raul.demo.domain.Cidade;
 import com.raul.demo.domain.Cliente;
 import com.raul.demo.domain.Endereco;
+import com.raul.demo.domain.enums.Perfil;
 import com.raul.demo.domain.enums.TipoCliente;
 import com.raul.demo.dto.ClienteDTO;
 import com.raul.demo.dto.ClienteNewDTO;
 import com.raul.demo.repositories.ClienteRepository;
 import com.raul.demo.repositories.EnderecoRepository;
+import com.raul.demo.security.UserSS;
+import com.raul.demo.services.exceptions.AuthorizationException;
 import com.raul.demo.services.exceptions.DataIntegrityException;
 import com.raul.demo.services.exceptions.ObjectNotFoundException;
 
@@ -36,6 +39,14 @@ public class ClienteService {
 	private EnderecoRepository enderecoRepository;
 	
 	public Cliente findById(Integer id) {
+		/*Verifica se o usuário buscado n possui o perfil ADMIN e se o ID do user pesquisado é 
+		 * diferente do ID do usuário logado*/
+		UserSS user = UserService.authenticated();
+		
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
 		Optional<Cliente> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! ID: " + id + ", Tipo: " + Cliente.class.getName()));

@@ -41,14 +41,14 @@ public class ProdutoResource {
 			@RequestParam(value="nome", defaultValue="") String nome, 
 			@RequestParam(value="categorias", defaultValue="") String categorias, 
 			@RequestParam(value="page", defaultValue="0") Integer page, 
-			@RequestParam(value="linesPerPage", defaultValue="24") Integer linesPerPage, 
+			@RequestParam(value="linhasPorPagina", defaultValue="24") Integer linhasPorPagina, 
 			@RequestParam(value="orderBy", defaultValue="nome") String orderBy, 
 			@RequestParam(value="direction", defaultValue="ASC") String direction) {
 		
 		String nomeDecoded = URLResource.decodeParam(nome);
 		List<Integer> ids = URLResource.decodeIntList(categorias);
 		
-		Page<Produto> list = service.search(nomeDecoded, ids, page, linesPerPage, orderBy, direction);
+		Page<Produto> list = service.search(nomeDecoded, ids, page, linhasPorPagina, orderBy, direction);
 		Page<ProdutoDTO> listDto = list.map(obj -> new ProdutoDTO(obj));  
 		
 		return ResponseEntity.ok().body(listDto);

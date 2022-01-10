@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.raul.demo.services.exceptions.AuthorizationException;
 import com.raul.demo.services.exceptions.DataIntegrityException;
 import com.raul.demo.services.exceptions.ObjectNotFoundException;
 
@@ -39,4 +40,12 @@ public class ResourceExceptionHandler {
 		}		
 		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
 	}
+	
+	@ExceptionHandler(AuthorizationException.class)
+	public ResponseEntity<StandardError> authorization(AuthorizationException e, HttpServletRequest request) {
+		//FORBIDDEN é o código http correspondente ao acesso negado
+		StandardError err = new StandardError(System.currentTimeMillis(), HttpStatus.FORBIDDEN.value(), "Acesso negado", e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+	}
+
 }
