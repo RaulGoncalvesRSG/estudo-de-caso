@@ -25,6 +25,8 @@ import com.raul.demo.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
+/*@EnableGlobalMethodSecurity permite colocar anotações de pré-autorização nos endpoints. Pode 
+colocar autorização para perfis específicos*/
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -51,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/estados/**",
 	};
 
+	//O usuário q n está cadastrado pode fazer um post em "/clientes"
 	private static final String[] PUBLIC_MATCHERS_POST = {
 			"/clientes/**",
 			"/auth/forgot/**"
@@ -70,9 +73,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		em seção. Como n será armazenado seção, então isso n é uma preocupação*/
 		http.cors().and().csrf().disable();
 		http.authorizeRequests()
-			//Permite todos os caminhos que estiverem no vetor
+			/*Só permite o método POST para quem estiver na lista. Permite todos os caminhos que 
+			estiverem no vetor*/
 			.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
-			//Só permite o método GET para quem estiver na lista
 			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
 			.antMatchers(PUBLIC_MATCHERS).permitAll()
 			//Para todo resto é exigido autenticação
