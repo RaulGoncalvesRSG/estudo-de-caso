@@ -12,5 +12,6 @@ public interface EmailService {
 	
 	void sendEmail(SimpleMailMessage msg);
 	
+	//Gera uma nova senha para um determinado cliente
 	void sendNewPasswordEmail(Cliente cliente, String newPass);
 }

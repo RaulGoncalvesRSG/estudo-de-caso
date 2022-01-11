@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/estados/**",
 	};
 
-	//O usuário q n está cadastrado pode fazer um post em "/clientes"
+	//Caminhos q o usuário pode fazer o post sem precisar estar logado
 	private static final String[] PUBLIC_MATCHERS_POST = {
 			"/clientes/**",
 			"/auth/forgot/**"
