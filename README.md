@@ -1,20 +1,20 @@
 # Estudo de caso do diagrama UML
 
 ## Sobre o projeto
-O sistema back-end permite o usuário realizar pedidos de produtos. A arquitetura está dividida nas camadas resource (controller), service e reposotory. 
-Ao fazer um pedido, o sistema envia uma mensagem para o cliente através do email do Google. O cliente pode fazer o seu 
-pagamento por boleto ou por cartão. Caso escolha por cartão, pode ser definido a quantidade de parcelas para realizar o
-pagamento.
+O sistema back-end permite o usuário realizar pedidos de produtos. Cada produto pertence a uma categoria. Ao concluir sua compra, o 
+cliente pode fazer o  pagamento por boleto ou por cartão. Caso escolha por cartão, pode ser definido a quantidade de parcelas para realizar o
+pagamento. Ao fazer um pedido, o sistema envia uma mensagem para o cliente através do email do Google informando detalhes do pedido.
 
-Quando o usuário esquecer sua senha, ele pode recuperá-la através de uma nova senha gerada de forma aleatória.
-O sistema possui o refresh token para gerar um novo token com tempo de expiração renovado
+Caso o usuário esqueça sua senha, ele pode recuperá-la através de uma nova senha gerada de forma aleatória.
 
-O sistema permite que o usuário possa salvar uma imagem para o seu perfil. Essa imagem é guardada tanto no danco de dados quanto
-no serviador da amazon.
+O sistema permite que o usuário possa salvar uma imagem para o seu perfil. Essa imagem é guardada tanto no banco de dados quanto
+no servidor da Amazon.
 
-O usuário tem suas permissões de acesso a partir de seu perfil: Cliente ou ADMIN.
+O usuário tem suas permissões de acesso a partir de seu perfil: Cliente ou ADMIN. É utilizado o JWT para a segurança de acesso 
+aos endpoints. O sistema também possui o refresh token para gerar um novo token com tempo de expiração renovado.
+
 O projeto possui profiles: test (teste), dev (desenvolvimento) e prod (produção). 
-O profile define configurações do projeto ser executado em determinado ambiente.
+O profile define configurações do projeto a serem executadas em determinado ambiente.
 
 ## Tecnologias utilizadas
 * Java
@@ -25,17 +25,16 @@ O profile define configurações do projeto ser executado em determinado ambient
 * Banco de Dados H2
 * MySQL
 * SMTP do Google
-* Amazonaws
+* Amazon AWS
 
 ## Padrões utilizados no projeto
 * Rest
-* DTO
-* Strategy
+* Data Transfer Object (DTO)
 
 ## Diagrama UML
 ![Diagrama UML](imagens_sistema/diagrama.png)
 
-## Estrutura das camadas do sistema
+## Estrutura de camadas do sistema
 ![Estrutura das camadas](imagens_sistema/estrutura_camadas.png)
 
 ## Autor

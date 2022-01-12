@@ -34,6 +34,7 @@ public class ResourceExceptionHandler {
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<StandardError> validation(MethodArgumentNotValidException e, HttpServletRequest request) {
+		//UNPROCESSABLE_ENTITY - status 422
 		ValidationError err = new ValidationError(System.currentTimeMillis(), HttpStatus.UNPROCESSABLE_ENTITY.value(), "Erro de validação", e.getMessage(), request.getRequestURI());
 		
 		//Pecorre a lista de erros da exceção MethodArgumentNotValidException
@@ -45,7 +46,7 @@ public class ResourceExceptionHandler {
 	
 	@ExceptionHandler(AuthorizationException.class)
 	public ResponseEntity<StandardError> authorization(AuthorizationException e, HttpServletRequest request) {
-		//FORBIDDEN é o código http correspondente ao acesso negado
+		//FORBIDDEN é o código http 403 correspondente ao acesso negado
 		StandardError err = new StandardError(System.currentTimeMillis(), HttpStatus.FORBIDDEN.value(), "Acesso negado", e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
 	}
