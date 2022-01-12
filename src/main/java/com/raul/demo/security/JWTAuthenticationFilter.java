@@ -57,15 +57,17 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	
 	@Override			//O que faz se a autenticação for um sucesso
     protected void successfulAuthentication(HttpServletRequest req,
-                                            HttpServletResponse res,
+                                            HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
 	
 		//getPrincipal retorna o usuário do SS. getUsername pega o email da pessoa q fez o login
 		String username = ((UserSS) auth.getPrincipal()).getUsername();
         String token = jwtUtil.generateToken(username);
-        res.addHeader("Authorization", "Bearer " + token);	 //Acrescenta o token como cabeçalho da resposta
-        res.addHeader("access-control-expose-headers", "Authorization");
+        //Acrescenta o token como cabeçalho da resposta
+        response.addHeader("Authorization", "Bearer " + token);	 
+        //Expõe o header Authorization e libera a leitura do cabeçalho (cabeçalho personalizado)
+        response.addHeader("access-control-expose-headers", "Authorization");
 	}
 	
 	//Classe para personalizar caso a autenticação falhe

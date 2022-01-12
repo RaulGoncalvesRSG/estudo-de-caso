@@ -34,6 +34,7 @@ public class AuthResource {
 		//Gera um novo token com tempo de expiração renovado
 		String token = jwtUtil.generateToken(user.getUsername());	
 		response.addHeader("Authorization", "Bearer " + token);
+		//Expõe o header Authorization e libera a leitura do cabeçalho (cabeçalho personalizado)
 		response.addHeader("access-control-expose-headers", "Authorization");
 		return ResponseEntity.noContent().build();
 	}

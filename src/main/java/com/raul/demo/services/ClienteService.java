@@ -96,6 +96,24 @@ public class ClienteService {
 		}
 	}
 	
+	//O usuário consegue apenas pegar os dados do seu próprio email
+	public Cliente findByEmail(String email) {
+		UserSS user = UserService.authenticated();			//Pega o usuário autenticado
+		
+		//Deu problema de autenticação ou o email n é o mesmo do usuário logado
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !email.equals(user.getUsername())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+	
+		Cliente obj = repository.findByEmail(email);
+		
+		if (obj == null) {
+			throw new ObjectNotFoundException(
+					"Objeto não encontrado! Id: " + user.getId() + ", Tipo: " + Cliente.class.getName());
+		}
+		return obj;
+	}
+	
 	public Page<Cliente> findPage(Integer page, Integer linhasPorPagina, String orderBy, String direction){
 		PageRequest pageRequest = PageRequest.of(page, linhasPorPagina, Direction.valueOf(direction), orderBy);
 		return repository.findAll(pageRequest);
