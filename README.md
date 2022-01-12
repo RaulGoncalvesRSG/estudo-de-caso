@@ -9,6 +9,9 @@ pagamento.
 Quando o usuário esquecer sua senha, ele pode recuperá-la através de uma nova senha gerada de forma aleatória.
 O sistema possui o refresh token para gerar um novo token com tempo de expiração renovado
 
+O sistema permite que o usuário possa salvar uma imagem para o seu perfil. Essa imagem é guardada tanto no danco de dados quanto
+no serviador da amazon.
+
 O usuário tem suas permissões de acesso a partir de seu perfil: Cliente ou ADMIN.
 O projeto possui profiles: test (teste), dev (desenvolvimento) e prod (produção). 
 O profile define configurações do projeto ser executado em determinado ambiente.
@@ -22,6 +25,7 @@ O profile define configurações do projeto ser executado em determinado ambient
 * Banco de Dados H2
 * MySQL
 * SMTP do Google
+* Amazonaws
 
 ## Padrões utilizados no projeto
 * Rest

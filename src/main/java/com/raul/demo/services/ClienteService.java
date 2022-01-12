@@ -1,16 +1,20 @@
 package com.raul.demo.services;
 
+import java.awt.image.BufferedImage;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.raul.demo.domain.Cidade;
 import com.raul.demo.domain.Cliente;
@@ -37,6 +41,18 @@ public class ClienteService {
 	
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	
+	@Autowired
+	private S3Service s3Service;
+	
+	@Autowired
+	private ImageService imageService;
+		
+	@Value("${img.prefix.client.profile}")
+	private String prefix;
+	
+	@Value("${img.profile.size}")
+	private Integer size;
 	
 	public Cliente findById(Integer id) {
 		/*Verifica se o usuário buscado n possui o perfil ADMIN e se o ID do user pesquisado é 
@@ -109,5 +125,34 @@ public class ClienteService {
 	private void updateData(Cliente newObj, Cliente obj) {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
+	}
+	
+	//Faz o upload da foto de perfil do usuário
+	public URI uploadProfilePicture(MultipartFile multipartFile) {
+		UserSS user = UserService.authenticated();
+		
+		if (user == null) {				 
+			throw new AuthorizationException("Acesso negado");
+		}
+		saveImageUrl(user, multipartFile);
+		
+		//Pega a img JPG
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+		jpgImage = imageService.cropSquare(jpgImage);		//Recorta a img de forma quadrada
+		jpgImage = imageService.resize(jpgImage, size);		//Redimensiona a img
+		
+		//Define o nome do arquivo q será enviado para o S3. Ex: cp1.jpg
+		String fileName = prefix + user.getId() + ".jpg";
+		
+		//Repassa a chamada do método para o S3Service
+		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
+	}
+	
+	//Salva a URL da foto no Cliente no BD
+	private void saveImageUrl(UserSS user, MultipartFile multipartFile) {
+		URI uri = s3Service.uploadFile(multipartFile);			//Url da img salva na amazon
+		Cliente cliente = repository.findById(user.getId()).get();
+		cliente.setImageUrl(uri.toString());
+		repository.save(cliente);				//Salva no BD o cliente com a foto atualizada
 	}
 }
