@@ -24,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.raul.demo.domain.Cliente;
 import com.raul.demo.dto.ClienteDTO;
 import com.raul.demo.dto.ClienteNewDTO;
+import com.raul.demo.dto.SenhaDTO;
 import com.raul.demo.services.ClienteService;
 
 @RestController
@@ -67,6 +68,12 @@ public class ClienteResource {
 		Cliente obj = service.fromDTO(objDto);
 		obj.setId(id);
 		obj = service.update(obj);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping(value = "/senha")
+	public ResponseEntity<Void> updatePassword(@Valid @RequestBody SenhaDTO objDto){
+		service.updatePassword(objDto);
 		return ResponseEntity.noContent().build();
 	}
 	

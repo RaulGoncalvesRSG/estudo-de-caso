@@ -23,6 +23,7 @@ import com.raul.demo.domain.enums.Perfil;
 import com.raul.demo.domain.enums.TipoCliente;
 import com.raul.demo.dto.ClienteDTO;
 import com.raul.demo.dto.ClienteNewDTO;
+import com.raul.demo.dto.SenhaDTO;
 import com.raul.demo.repositories.ClienteRepository;
 import com.raul.demo.repositories.EnderecoRepository;
 import com.raul.demo.security.UserSS;
@@ -83,6 +84,20 @@ public class ClienteService {
 	public Cliente update(Cliente obj) {
 		Cliente newObj = findById(obj.getId());
 		updateData(newObj, obj);
+		return repository.save(newObj);
+	}
+	
+	public Cliente updatePassword(SenhaDTO objDto) {
+		UserSS user = UserService.authenticated();			//Pega o usuário autenticado
+		Cliente newObj = findByEmail(user.getUsername());
+		
+		//encoder.matches compara se uma str codificada é igual a uma str encodada
+		if (!encoder.matches(objDto.getSenhaAtual(), newObj.getSenha())) {
+			throw new AuthorizationException("A senha atual está incorreta");
+		}
+		
+		//Salva a nova senha passada pelo usuário
+		newObj.setSenha(encoder.encode(objDto.getNovaSenha()));
 		return repository.save(newObj);
 	}
 
