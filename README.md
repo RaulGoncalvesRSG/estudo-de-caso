@@ -23,7 +23,7 @@ exceção de forma personalizada.
 * Spring Boot
 * Spring Rest
 * Spring Data JPA
-* Spring Security/ JWT
+* Spring Security e JWT
 * Banco de Dados H2
 * MySQL
 * SMTP do Google

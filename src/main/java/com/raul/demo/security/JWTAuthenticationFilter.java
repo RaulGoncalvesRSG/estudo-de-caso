@@ -13,7 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,11 +26,12 @@ autenticação é preciso estender UsernamePasswordAuthenticationFilter. Ao faze
 Secury sabe q esse filtro precisará interceptar a requisição de login*/
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-	private AuthenticationManager authenticationManager;	//Classe do SS
+	//AuthenticationManager é a principal interface (do SS) de estratégia para autenticação
+	private AuthenticationManager authenticationManager;
     private JWTUtil jwtUtil;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
-    	setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler());
+    	super();
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
     }
@@ -43,7 +43,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		try {
 			//Operação q pega os dados q vieram na requisição e converte para o tipo da classe especificado
 			CredenciaisDTO creds = new ObjectMapper().readValue(req.getInputStream(), CredenciaisDTO.class);
-	        //Esse token n é do JWT, é do Spring Security. Unicialmente a lista passada é vazia
+	        //Esse token n é do JWT, é do Spring Security. Inicialmente a lista passada é vazia
 			UsernamePasswordAuthenticationToken authToken = 
 	        		new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getSenha(), new ArrayList<>());
 	        //authenticate verifica se o usuário e senha são válidos. Isso é feito com base no UserDatailService
@@ -55,7 +55,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		}
 	}
 	
-	@Override			//O que faz se a autenticação for um sucesso
+	@Override			//Método chamado caso a autenticação for um sucesso
     protected void successfulAuthentication(HttpServletRequest req,
                                             HttpServletResponse response,
                                             FilterChain chain,
@@ -70,24 +70,20 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.addHeader("access-control-expose-headers", "Authorization");
 	}
 	
-	//Classe para personalizar caso a autenticação falhe
-	private class JWTAuthenticationFailureHandler implements AuthenticationFailureHandler {
-		 
-        @Override
-        public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
-                throws IOException, ServletException {
-            response.setStatus(401);
-            response.setContentType("application/json"); 
-            response.getWriter().append(json());
-        }
-        
-        private String json() {
-            long date = new Date().getTime();
-            return "{\"timestamp\": " + date + ", "
-                + "\"status\": 401, "
-                + "\"error\": \"Não autorizado\", "
-                + "\"message\": \"Email ou senha inválidos\", "
-                + "\"path\": \"/login\"}";
-        }
+	@Override			//Método chamado caso a autenticação falhe
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException failed) throws IOException, ServletException {
+		response.setStatus(401);
+        response.setContentType("application/json"); 
+        response.getWriter().append(json());
+	}
+	
+	private String json() {
+        long date = new Date().getTime();
+        return "{\"timestamp\": " + date + ", "
+            + "\"status\": 401, "
+            + "\"error\": \"Não autorizado\", "
+            + "\"message\": \"Email ou senha inválidos\", "
+            + "\"path\": \"/login\"}";
     }
 }

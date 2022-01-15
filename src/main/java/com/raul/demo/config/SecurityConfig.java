@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,8 +22,7 @@ import com.raul.demo.security.JWTAuthenticationFilter;
 import com.raul.demo.security.JWTAuthorizationFilter;
 import com.raul.demo.security.JWTUtil;
 
-@Configuration
-@EnableWebSecurity
+@EnableWebSecurity			//@EnableWebSecurity já tem a anotação @Configuration
 /*@EnableGlobalMethodSecurity permite colocar anotações de pré-autorização nos endpoints. Pode 
 colocar autorização para perfis específicos*/
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -35,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired			
 	private UserDetailsService userDetailsService;
 	
-	@Autowired
+	@Autowired		//Environment é uma interface q representa em qual ambiente o sistema está sendo executado
     private Environment environment;			//Para acessar os profiles do projeto
 	
 	@Autowired
@@ -80,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(PUBLIC_MATCHERS).permitAll()
 			//Para todo resto é exigido autenticação
 			.anyRequest().authenticated();
-		//Filtro de autenticação
+		//Filtro de autenticação. authenticationManager() traz o resultado de sucesso ou de erro
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
 		//Filtro de autorização
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
